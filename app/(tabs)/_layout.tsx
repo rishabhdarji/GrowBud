@@ -27,11 +27,13 @@ export default function TabLayout() {
             elevation: 0,
             borderTopWidth: 0,
             height: 60,
+            backgroundColor: '#90EE90', // Updated footer background color to light green
           },
           default: {
             height: 60,
             elevation: 0,
             borderTopWidth: 0,
+            backgroundColor: '#90EE90', // Updated footer background color to light green
           },
         }),
       }}>
@@ -51,11 +53,11 @@ export default function TabLayout() {
               {...props}
               style={styles.plusButton}
               onPress={() => {
-                // Camera functionality will be added later
+                // Navigate to the camera screen
                 console.log('Camera button pressed');
               }}>
-              <View style={[styles.plusButtonInner, { backgroundColor: Colors[theme].tint }]}>
-                <Ionicons name="add" size={32} color="#FFF" />
+              <View style={[styles.plusButtonInner, { backgroundColor: '#90EE90' }]}>
+                <Ionicons name="camera" size={28} color="#fff" />
               </View>
             </TouchableOpacity>
           ),
@@ -92,5 +94,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  }
+  },
+  cameraIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
+  },
 });
