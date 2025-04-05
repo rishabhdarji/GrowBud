@@ -3,9 +3,12 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
 
   return (
     <ThemedView style={styles.container}>
@@ -18,8 +21,14 @@ export default function ProfileScreen() {
         }}
       >
         {/* Profile Header */}
-        <ThemedView style={styles.profileHeader}>
-          <TouchableOpacity style={styles.backButton}>
+        <LinearGradient
+          colors={['#61D2C4', '#29D890']}
+          style={styles.profileHeader}
+        >
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => router.push('/')}
+          >
             <Ionicons name="chevron-back" size={24} color="#FFF" />
           </TouchableOpacity>
           <Image
@@ -33,7 +42,7 @@ export default function ProfileScreen() {
           <TouchableOpacity style={styles.menuButton}>
             <Ionicons name="ellipsis-vertical" size={24} color="#FFF" />
           </TouchableOpacity>
-        </ThemedView>
+        </LinearGradient>
 
         {/* Tabs */}
         <ThemedView style={styles.tabsContainer}>
@@ -74,7 +83,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F9FA',
   },
   profileHeader: {
-    backgroundColor: '#6CC1E0',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     alignItems: 'center',
