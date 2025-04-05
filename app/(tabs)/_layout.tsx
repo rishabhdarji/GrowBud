@@ -2,7 +2,11 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform, TouchableOpacity, View, StyleSheet, TouchableOpacityProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
 import { LinearGradient } from 'expo-linear-gradient';
+
+import { router } from 'expo-router';
+
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -60,7 +64,7 @@ export default function TabLayout() {
               style={styles.plusButton}
               onPress={() => {
                 // Navigate to the camera screen
-                console.log('Camera button pressed');
+                router.push('/(tabs)/camera');
               }}>
               <View style={[styles.plusButtonInner, { backgroundColor: '#48A2F5' }]}>
                 <Ionicons name="camera" size={28} color="#fff" />
