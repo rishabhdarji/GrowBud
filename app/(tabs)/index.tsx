@@ -1,136 +1,95 @@
-import { Image, StyleSheet, TextInput, ScrollView, TouchableOpacity, View, StatusBar } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Image, StyleSheet, TextInput, ScrollView, View, StatusBar, FlatList, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+const plants = [
+  { id: '1', source: require('../../assets/images/mini-plant.png') },
+  { id: '2', source: require('../../assets/images/mini-plant.png') },
+  { id: '3', source: require('../../assets/images/mini-plant.png') },
+  { id: '4', source: require('../../assets/images/mini-plant.png') },
+  { id: '5', source: require('../../assets/images/mini-plant.png') },
+  { id: '6', source: require('../../assets/images/mini-plant.png') },
+];
+
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  
+
   return (
     <ThemedView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: insets.top + 10,
-          paddingBottom: 100
-        }}
+      <StatusBar barStyle="light-content" backgroundColor="#6CC1E0" />
+      <LinearGradient
+        colors={["#6CC1E0", "#A1E3D8"]}
+        style={[styles.header, { paddingTop: insets.top + 20 }]}
       >
-        {/* Header Section */}
-        <ThemedView style={styles.header}>
-          <ThemedView>
-            <ThemedText style={styles.greeting}>Hello Taylor,</ThemedText>
+        <View style={styles.headerContent}>
+          <View>
+            <ThemedText style={styles.greeting}>Hello Apurv,</ThemedText>
             <ThemedText style={styles.subtitle}>Let's Learn More About Plants</ThemedText>
-          </ThemedView>
+          </View>
           <Image
-            source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+            source={require('../../assets/images/icon.png')}
             style={styles.profileImage}
           />
-        </ThemedView>
-
-        {/* Search Bar */}
-        <ThemedView style={styles.searchContainer}>
+        </View>
+        <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
           <TextInput
             style={styles.searchBar}
             placeholder="Search For Plants"
             placeholderTextColor="#999"
           />
-        </ThemedView>
+        </View>
+      </LinearGradient>
 
-        {/* Quick Action Buttons */}
-        <ThemedView style={styles.quickActions}>
-          <TouchableOpacity style={styles.actionButton}>
-            <ThemedView style={styles.iconContainer}>
-              <Ionicons name="camera-outline" size={22} color="#fff" />
-            </ThemedView>
-            <ThemedText style={styles.actionText}>Camera</ThemedText>
+      <ThemedView style={styles.content}>
+        <View style={styles.categoryContainer}>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image 
+              source={require('../../assets/icons/camera.png')} 
+              style={styles.categoryIcon} 
+            />
+            <ThemedText style={styles.categoryText}>Camera</ThemedText>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <ThemedView style={styles.iconContainer}>
-              <Ionicons name="leaf-outline" size={22} color="#fff" />
-            </ThemedView>
-            <ThemedText style={styles.actionText}>Species</ThemedText>
+          
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image 
+              source={require('../../assets/icons/species.jpg')} 
+              style={styles.categoryIcon} 
+            />
+            <ThemedText style={styles.categoryText}>Species</ThemedText>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <ThemedView style={styles.iconContainer}>
-              <Ionicons name="newspaper-outline" size={22} color="#fff" />
-            </ThemedView>
-            <ThemedText style={styles.actionText}>Articles</ThemedText>
+          
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image 
+              source={require('../../assets/icons/article.png')} 
+              style={styles.categoryIcon} 
+            />
+            <ThemedText style={styles.categoryText}>Articles</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </View>
 
-        {/* Plant Types Section */}
-        <ThemedView style={styles.sectionHeader}>
-          <ThemedText style={styles.sectionTitle}>Plant Types</ThemedText>
+        <View style={styles.sectionHeaderContainer}>
+          <ThemedText style={styles.sectionTitle}>My Plants</ThemedText>
           <TouchableOpacity>
             <ThemedText style={styles.seeAllText}>See All</ThemedText>
           </TouchableOpacity>
-        </ThemedView>
+        </View>
         
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
-          <ThemedView style={styles.card}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1470058869958-2a77ade41c02?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
-              style={styles.cardImage} 
-            />
-            <ThemedView style={styles.cardContent}>
-              <ThemedText style={styles.cardTitle}>Home Plants</ThemedText>
-              <ThemedText style={styles.cardSubtitle}>68 Types of Plants</ThemedText>
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.card}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1466781783364-36c955e42a7f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
-              style={styles.cardImage} 
-            />
-            <ThemedView style={styles.cardContent}>
-              <ThemedText style={styles.cardTitle}>Humid Plants</ThemedText>
-              <ThemedText style={styles.cardSubtitle}>102 Types of Plants</ThemedText>
-            </ThemedView>
-          </ThemedView>
-          <ThemedView style={styles.card}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1509223197845-458d87318791?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
-              style={styles.cardImage} 
-            />
-            <ThemedView style={styles.cardContent}>
-              <ThemedText style={styles.cardTitle}>Succulents</ThemedText>
-              <ThemedText style={styles.cardSubtitle}>45 Types of Plants</ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </ScrollView>
-
-        {/* Photography Section */}
-        <ThemedView style={styles.sectionHeader}>
-          <ThemedText style={styles.sectionTitle}>Photography</ThemedText>
-          <TouchableOpacity>
-            <ThemedText style={styles.seeAllText}>See All</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-        
-        <ThemedView style={styles.photoGrid}>
-          <TouchableOpacity style={styles.photoCard}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1520302519943-6071779f0551?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
-              style={styles.photoImage} 
-            />
-            <ThemedView style={styles.photoTagContainer}>
-              <ThemedText style={styles.photoTag}>#Mini</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.photoCard}>
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1515513292257-0456dbed7941?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
-              style={styles.photoImage} 
-            />
-            <ThemedView style={styles.photoTagContainer}>
-              <ThemedText style={styles.photoTag}>#Plant</ThemedText>
-            </ThemedView>
-          </TouchableOpacity>
-        </ThemedView>
-      </ScrollView>
+        <FlatList
+          data={plants}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.gridRow}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.plantCard}>
+              <Image source={item.source} style={styles.plantImage} />
+            </TouchableOpacity>
+          )}
+        />
+      </ThemedView>
     </ThemedView>
   );
 }
@@ -141,43 +100,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F9FA',
   },
   header: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   greeting: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#FFF',
     marginBottom: 4,
-    color: '#1A1A1A',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#FFF',
   },
   profileImage: {
     width: 50,
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: '#FFF',
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFF',
-    marginHorizontal: 20,
     borderRadius: 12,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    marginBottom: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -190,43 +147,43 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     fontSize: 16,
-    padding: 0,
     color: '#333',
   },
-  quickActions: {
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  categoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginBottom: 32,
+    marginBottom: 24,
   },
-  actionButton: {
+  categoryButton: {
     alignItems: 'center',
+    backgroundColor: '#EFF6FC',
+    borderRadius: 12,
+    padding: 12,
     width: '30%',
-  },
-  iconContainer: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 15,
-    width: 56,
-    height: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  actionText: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
+  categoryIcon: {
+    width: 28,
+    height: 28,
+    marginBottom: 8,
   },
-  sectionHeader: {
+  categoryText: {
+    fontSize: 12,
+    color: '#666',
+  },
+  sectionHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 20,
     marginBottom: 16,
   },
   sectionTitle: {
@@ -236,73 +193,29 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 14,
-    color: '#4CAF50',
+    color: '#6CC1E0',
     fontWeight: '500',
   },
-  horizontalScroll: {
-    paddingLeft: 20,
-    marginBottom: 32,
+  gridRow: {
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
-  card: {
+  plantCard: {
     backgroundColor: '#FFF',
-    borderRadius: 16,
-    width: 220,
-    marginRight: 16,
+    borderRadius: 12,
     overflow: 'hidden',
+    width: '48%',
+    aspectRatio: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+    marginBottom: 16,
   },
-  cardImage: {
+  plantImage: {
     width: '100%',
-    height: 120,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  cardContent: {
-    padding: 16,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#1A1A1A',
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: '#666',
-  },
-  photoGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginBottom: 20,
-  },
-  photoCard: {
-    width: '48%',
-    borderRadius: 16,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  photoImage: {
-    width: '100%',
-    height: 180,
-    borderRadius: 16,
-  },
-  photoTagContainer: {
-    position: 'absolute',
-    bottom: 12,
-    left: 12,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  photoTag: {
-    color: '#FFF',
-    fontSize: 14,
-    fontWeight: '500',
+    height: '100%',
+    resizeMode: 'cover',
   },
 });
