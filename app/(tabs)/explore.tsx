@@ -1,109 +1,322 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { StyleSheet, Image, ScrollView, TouchableOpacity, View, StatusBar } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function TabTwoScreen() {
+export default function ProfileScreen() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingTop: insets.top + 10,
+          paddingBottom: 100
+        }}
+      >
+        {/* Profile Header */}
+        <ThemedView style={styles.profileHeader}>
+          <Image
+            source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+            style={styles.profileImage}
+          />
+          <ThemedText style={styles.profileName}>Taylor Johnson</ThemedText>
+          <ThemedText style={styles.profileBio}>Plant enthusiast & nature photographer</ThemedText>
+          
+          <ThemedView style={styles.statsContainer}>
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>24</ThemedText>
+              <ThemedText style={styles.statLabel}>Plants</ThemedText>
+            </ThemedView>
+            <View style={styles.statDivider} />
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>156</ThemedText>
+              <ThemedText style={styles.statLabel}>Saved</ThemedText>
+            </ThemedView>
+            <View style={styles.statDivider} />
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>9</ThemedText>
+              <ThemedText style={styles.statLabel}>Groups</ThemedText>
+            </ThemedView>
+          </ThemedView>
+
+          <TouchableOpacity style={styles.editProfileButton}>
+            <ThemedText style={styles.editProfileButtonText}>Edit Profile</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+
+        {/* My Collection Section */}
+        <ThemedView style={styles.sectionHeader}>
+          <ThemedText style={styles.sectionTitle}>My Collection</ThemedText>
+          <TouchableOpacity>
+            <ThemedText style={styles.seeAllText}>See All</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+          <ThemedView style={styles.plantCard}>
+            <Image 
+              source={{ uri: 'https://images.unsplash.com/photo-1652697238807-b4a0eb35c02f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Monstera</ThemedText>
+              <ThemedText style={styles.plantStatus}>Healthy</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#4CAF50" />
+                <ThemedText style={styles.waterText}>Watered 2d ago</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.plantCard}>
+            <Image 
+              source={{ uri: 'https://images.unsplash.com/photo-1620803366004-119b57f54cd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Snake Plant</ThemedText>
+              <ThemedText style={styles.plantStatus}>Needs Water</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#FF5722" />
+                <ThemedText style={[styles.waterText, {color: '#FF5722'}]}>Water today</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.plantCard}>
+            <Image 
+              source={{ uri: 'https://images.unsplash.com/photo-1617173944883-3853328a0db0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Fiddle Fig</ThemedText>
+              <ThemedText style={styles.plantStatus}>Healthy</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#4CAF50" />
+                <ThemedText style={styles.waterText}>Watered 1d ago</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+        </ScrollView>
+
+        {/* Recent Activity Section */}
+        <ThemedView style={styles.sectionHeader}>
+          <ThemedText style={styles.sectionTitle}>Recent Activity</ThemedText>
+        </ThemedView>
+
+        <ThemedView style={styles.activityContainer}>
+          <ThemedView style={styles.activityItem}>
+            <ThemedView style={styles.activityIconContainer}>
+              <Ionicons name="camera" size={20} color="#fff" />
+            </ThemedView>
+            <ThemedView style={styles.activityContent}>
+              <ThemedText style={styles.activityText}>
+                You scanned a <ThemedText style={styles.activityHighlight}>Peace Lily</ThemedText>
+              </ThemedText>
+              <ThemedText style={styles.activityTime}>2 days ago</ThemedText>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.activityItem}>
+            <ThemedView style={[styles.activityIconContainer, {backgroundColor: '#7986CB'}]}>
+              <Ionicons name="bookmark" size={20} color="#fff" />
+            </ThemedView>
+            <ThemedView style={styles.activityContent}>
+              <ThemedText style={styles.activityText}>
+                You saved <ThemedText style={styles.activityHighlight}>5 plants</ThemedText> to your collection
+              </ThemedText>
+              <ThemedText style={styles.activityTime}>5 days ago</ThemedText>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.activityItem}>
+            <ThemedView style={[styles.activityIconContainer, {backgroundColor: '#26A69A'}]}>
+              <Ionicons name="water" size={20} color="#fff" />
+            </ThemedView>
+            <ThemedView style={styles.activityContent}>
+              <ThemedText style={styles.activityText}>
+                You watered all your plants
+              </ThemedText>
+              <ThemedText style={styles.activityTime}>1 week ago</ThemedText>
+            </ThemedView>
+          </ThemedView>
+        </ThemedView>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: '#F7F9FA',
   },
-  titleContainer: {
+  profileHeader: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 24,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+    borderWidth: 3,
+    borderColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  profileBio: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  statsContainer: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+  },
+  statItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  statDivider: {
+    width: 1,
+    height: '80%',
+    backgroundColor: '#EEEEEE',
+    alignSelf: 'center',
+  },
+  editProfileButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+  },
+  editProfileButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: '#4CAF50',
+    fontWeight: '500',
+  },
+  horizontalScroll: {
+    paddingLeft: 20,
+    marginBottom: 32,
+  },
+  plantCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    width: 200,
+    marginRight: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  plantImage: {
+    width: '100%',
+    height: 120,
+  },
+  plantDetails: {
+    padding: 16,
+  },
+  plantName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  plantStatus: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  waterIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  waterText: {
+    fontSize: 12,
+    color: '#4CAF50',
+    marginLeft: 4,
+  },
+  activityContainer: {
+    paddingHorizontal: 20,
+  },
+  activityItem: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  activityIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  activityContent: {
+    flex: 1,
+  },
+  activityText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 2,
+  },
+  activityHighlight: {
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+  },
+  activityTime: {
+    fontSize: 12,
+    color: '#888',
   },
 });
