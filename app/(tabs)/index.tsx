@@ -23,7 +23,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#6CC1E0" />
       <LinearGradient
-        colors={["#6CC1E0", "#A1E3D8"]}
+        colors={['#61D2C4', '#29D890']}
         style={[styles.header, { paddingTop: insets.top + 20 }]}
       >
         <View style={styles.headerContent}>

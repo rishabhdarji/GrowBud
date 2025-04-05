@@ -2,7 +2,11 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform, TouchableOpacity, View, StyleSheet, TouchableOpacityProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+import { LinearGradient } from 'expo-linear-gradient';
+
 import { router } from 'expo-router';
+
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -20,7 +24,12 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[theme].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={['#61D2C4', '#29D890']}
+            style={StyleSheet.absoluteFill}
+          />
+        ),
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -28,13 +37,13 @@ export default function TabLayout() {
             elevation: 0,
             borderTopWidth: 0,
             height: 60,
-            backgroundColor: '#90EE90', // Updated footer background color to light green
+            backgroundColor: 'transparent', // Transparent to show gradient
           },
           default: {
             height: 60,
             elevation: 0,
             borderTopWidth: 0,
-            backgroundColor: '#90EE90', // Updated footer background color to light green
+            backgroundColor: 'transparent', // Transparent to show gradient
           },
         }),
       }}>
@@ -57,7 +66,7 @@ export default function TabLayout() {
                 // Navigate to the camera screen
                 router.push('/(tabs)/camera');
               }}>
-              <View style={[styles.plusButtonInner, { backgroundColor: '#90EE90' }]}>
+              <View style={[styles.plusButtonInner, { backgroundColor: '#48A2F5' }]}>
                 <Ionicons name="camera" size={28} color="#fff" />
               </View>
             </TouchableOpacity>
