@@ -172,6 +172,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 30,
     marginBottom: 15,
+    backgroundColor: 'transparent',
+    borderBottomWidth: 0,
   },
   sectionTitle: {
     fontSize: 20,
