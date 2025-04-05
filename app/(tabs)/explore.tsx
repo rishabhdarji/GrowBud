@@ -20,10 +20,10 @@ export default function ProfileScreen() {
         {/* Profile Header */}
         <ThemedView style={styles.profileHeader}>
           <Image
-            source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+            source={require('../../assets/images/icon.png')}
             style={styles.profileImage}
           />
-          <ThemedText style={styles.profileName}>Taylor Johnson</ThemedText>
+          <ThemedText style={styles.profileName}>Apurv Kumar</ThemedText>
           <ThemedText style={styles.profileBio}>Plant enthusiast & nature photographer</ThemedText>
           
           <ThemedView style={styles.statsContainer}>
@@ -59,7 +59,7 @@ export default function ProfileScreen() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1652697238807-b4a0eb35c02f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              source={require('../../assets/images/mini-plant.png')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>
@@ -74,7 +74,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1620803366004-119b57f54cd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              source={require('../../assets/images/mini-plant.png')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>
@@ -89,7 +89,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1617173944883-3853328a0db0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' }} 
+              source={require('../../assets/images/mini-plant.png')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>
@@ -111,7 +111,7 @@ export default function ProfileScreen() {
         <ThemedView style={styles.activityContainer}>
           <ThemedView style={styles.activityItem}>
             <ThemedView style={styles.activityIconContainer}>
-              <Ionicons name="camera" size={20} color="#fff" />
+              <Image source={require('../../assets/icons/camera.png')} style={styles.activityIcon} />
             </ThemedView>
             <ThemedView style={styles.activityContent}>
               <ThemedText style={styles.activityText}>
@@ -123,7 +123,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.activityItem}>
             <ThemedView style={[styles.activityIconContainer, {backgroundColor: '#7986CB'}]}>
-              <Ionicons name="bookmark" size={20} color="#fff" />
+              <Image source={require('../../assets/icons/camera.png')} style={styles.activityIcon} />
             </ThemedView>
             <ThemedView style={styles.activityContent}>
               <ThemedText style={styles.activityText}>
@@ -135,7 +135,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.activityItem}>
             <ThemedView style={[styles.activityIconContainer, {backgroundColor: '#26A69A'}]}>
-              <Ionicons name="water" size={20} color="#fff" />
+              <Image source={require('../../assets/icons/species.jpg')} style={styles.activityIcon} />
             </ThemedView>
             <ThemedView style={styles.activityContent}>
               <ThemedText style={styles.activityText}>
@@ -151,6 +151,11 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  activityIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#fff'
+  },
   container: {
     flex: 1,
     backgroundColor: '#F7F9FA',
@@ -217,7 +222,7 @@ const styles = StyleSheet.create({
   editProfileButton: {
     paddingVertical: 10,
     paddingHorizontal: 24,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#6CC1E0',
     borderRadius: 20,
   },
   editProfileButtonText: {
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 14,
-    color: '#4CAF50',
+    color: '#6CC1E0',
     fontWeight: '500',
   },
   horizontalScroll: {
@@ -298,7 +303,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#6CC1E0',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
