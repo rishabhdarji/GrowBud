@@ -23,7 +23,7 @@ export default function ProfileScreen() {
             source={require('../../assets/images/icon.png')}
             style={styles.profileImage}
           />
-          <ThemedText style={styles.profileName}>Apurv Kumar</ThemedText>
+          <ThemedText style={styles.profileName}>Apurv Gaikwad</ThemedText>
           <ThemedText style={styles.profileBio}>Plant enthusiast & nature photographer</ThemedText>
           
           <ThemedView style={styles.statsContainer}>
@@ -59,7 +59,7 @@ export default function ProfileScreen() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={require('../../assets/images/mini-plant.png')} 
+              source={require('../../assets/images/7-plant.jpg')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>
@@ -74,7 +74,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={require('../../assets/images/mini-plant.png')} 
+              source={require('../../assets/images/snake-plant.jpg')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>
@@ -89,7 +89,7 @@ export default function ProfileScreen() {
 
           <ThemedView style={styles.plantCard}>
             <Image 
-              source={require('../../assets/images/mini-plant.png')} 
+              source={require('../../assets/images/fiddle-plant.jpg')} 
               style={styles.plantImage} 
             />
             <ThemedView style={styles.plantDetails}>

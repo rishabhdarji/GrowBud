@@ -6,12 +6,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const plants = [
-  { id: '1', source: require('../../assets/images/mini-plant.png') },
-  { id: '2', source: require('../../assets/images/mini-plant.png') },
-  { id: '3', source: require('../../assets/images/mini-plant.png') },
-  { id: '4', source: require('../../assets/images/mini-plant.png') },
-  { id: '5', source: require('../../assets/images/mini-plant.png') },
-  { id: '6', source: require('../../assets/images/mini-plant.png') },
+  { id: '1', source: require('../../assets/images/7-plant.jpg') },
+  { id: '2', source: require('../../assets/images/snake-plant.jpg') },
+  { id: '3', source: require('../../assets/images/fiddle-plant.jpg') },
+  { id: '4', source: require('../../assets/images/4-plant.jpg') },
+  { id: '5', source: require('../../assets/images/5-plant.jpg') },
+  { id: '6', source: require('../../assets/images/6-plant.jpg') },
 ];
 
 export default function HomeScreen() {
@@ -21,7 +21,7 @@ export default function HomeScreen() {
     <ThemedView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#6CC1E0" />
       <LinearGradient
-        colors={["#6CC1E0", "#A1E3D8"]}
+        colors={["#02AABD", "#00CDAC"]}
         style={[styles.header, { paddingTop: insets.top + 20 }]}
       >
         <View style={styles.headerContent}>
