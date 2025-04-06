@@ -148,7 +148,7 @@ export default function CameraScreen() {
 
     Alert.alert(
       "Plant Identified",
-      `The plant is identified as: ${data.plantName || 'Unknown'}`,
+      `The plant is identified as: ${data.recommendations[0].name || 'Unknown'}`,
       [{ text: "OK" }]
     );
 
