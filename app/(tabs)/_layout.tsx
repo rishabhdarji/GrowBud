@@ -1,113 +1,104 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform, TouchableOpacity, View, StyleSheet, TouchableOpacityProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useState, useEffect, createContext, useContext } from 'react';
 
-import { LinearGradient } from 'expo-linear-gradient';
+// Create a context to store our navigation state
+export const NavigationStateContext = createContext<{
+  navigationParams: {
+    base64Image: string | null;
+    selectedCity: string;
+    selectedOccupation: string;
+  };
+  setNavigationParams: (params: any) => void;
+}>({
+  navigationParams: {
+    base64Image: null,
+    selectedCity: '',
+    selectedOccupation: '',
+  },
+  setNavigationParams: () => {},
+});
 
-import { router } from 'expo-router';
-
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+// Custom hook to use navigation state
+export const useNavigationState = () => useContext(NavigationStateContext);
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const theme = colorScheme ?? 'light';
+  // Create state to store navigation parameters
+  const [navigationParams, setNavigationParams] = useState({
+    base64Image: null as string | null,
+    selectedCity: '',
+    selectedOccupation: '',
+  });
+
+  // For debugging
+  useEffect(() => {
+    console.log('Global navigation params updated:', navigationParams);
+  }, [navigationParams]);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[theme].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: () => (
-          <LinearGradient
-            colors={['#61D2C4', '#29D890']}
-            style={StyleSheet.absoluteFill}
-          />
-        ),
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-            elevation: 0,
-            borderTopWidth: 0,
-            height: 60,
-            backgroundColor: 'transparent', // Transparent to show gradient
-          },
-          default: {
-            height: 60,
-            elevation: 0,
-            borderTopWidth: 0,
-            backgroundColor: 'transparent', // Transparent to show gradient
-          },
-        }),
+    <NavigationStateContext.Provider value={{ navigationParams, setNavigationParams }}>
+      <Tabs screenOptions={{
+        tabBarActiveTintColor: '#29D890',
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }: { color: string }) => <Ionicons name="home" size={24} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="camera"
-        options={{
-          title: '',
-          tabBarButton: (props: TouchableOpacityProps) => (
-            <TouchableOpacity
-              {...props}
-              style={styles.plusButton}
-              onPress={() => {
-                // Navigate to the camera screen
-                router.push('/(tabs)/camera');
-              }}>
-              <View style={[styles.plusButtonInner, { backgroundColor: '#48A2F5' }]}>
-                <Ionicons name="camera" size={28} color="#fff" />
-              </View>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }: { color: string }) => <Ionicons name="person" size={24} color={color} />,
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        
+        <Tabs.Screen
+          name="camera"
+          options={{
+            title: 'Camera',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="camera" size={size} color={color} />
+            ),
+          }}
+        />
+        
+        <Tabs.Screen
+          name="explore"
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" size={size} color={color} />
+            ),
+          }}
+        />
+        
+        {/* Hide these screens from tab bar but keep them accessible */}
+        <Tabs.Screen
+          name="CitySelection"
+          options={{
+            href: null,
+          }}
+        />
+        
+        <Tabs.Screen
+          name="OccupationSelection"
+          options={{
+            href: null,
+          }}
+        />
+        
+        <Tabs.Screen
+          name="LoadingScreen"
+          options={{
+            href: null,
+          }}
+        />
+        
+        <Tabs.Screen
+          name="ResultScreen"
+          options={{
+            href: null,
+          }}
+        />
+      </Tabs>
+    </NavigationStateContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  plusButton: {
-    top: -20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusButtonInner: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  cameraIcon: {
-    width: 28,
-    height: 28,
-    resizeMode: 'contain',
-  },
-});

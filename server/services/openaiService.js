@@ -1,25 +1,30 @@
+// services/openaiService.js
 const { OpenAI } = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 module.exports = async function getRecommendations(imageBase64, location, climate, userType) {
+  // build a plain string for location
+  const locText = location.city
+    ? location.city
+    : `${location.lat}, ${location.lon}`;
+
   const prompt = `
-You are an expert gardening assistant. A user has uploaded a photo of their space along with their location and lifestyle information. Using the following data, recommend exactly 3 beginner-friendly plants. For each plant, provide only the plant name and a very short description (one sentence). Return your output as a JSON array of objects with keys "name" and "description". Do not include any additional text.
+You are an expert gardening assistant. A user has uploaded a photo of their space along with their location and lifestyle.  
+Based on the image, the location (${locText}), climate (Temp: ${climate.temperature}°C, Humidity: ${climate.humidity || 'N/A'}%, Condition: ${climate.condition}, Wind Speed: ${climate.wind_speed} m/s), and the fact that they are a ${userType}, recommend exactly three beginner-friendly plants.
 
-Location Data:
-- Location: ${location.city || `${location.lat}, ${location.lon}`}
-- Climate: Temperature ${climate.temperature}°C, Humidity ${climate.humidity ? climate.humidity + "%" : "N/A"}, Condition: ${climate.condition}, Wind Speed: ${climate.wind_speed} m/s
+For each plant, include:
+- name  
+- scientificName  
+- description (one paragraph)  
+- careInstructions (one paragraph)  
+- benefits (an array of 3–5 bullet strings)
 
-User Lifestyle:
-- User Type: ${userType}
+Return your answer as valid JSON with a top‑level key "recommendations" whose value is an array of these three plant objects. Do not include any explanatory text outside the JSON.
+`;
 
-Image Analysis: Analyze the provided image for lighting, available space, and surface conditions.
-
-Please provide your recommendations now.
-  `;
-  console.log("Calling OpenAI API with updated prompt for filtered recommendations...");
-  
+  console.log("Calling OpenAI API for detailed plant recommendations...");
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",  // or the model you're using
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "user",
@@ -29,20 +34,21 @@ Please provide your recommendations now.
         ]
       }
     ],
-    max_tokens: 500,
+    max_tokens: 800,
   });
-  console.log("OpenAI API call successful!!");
-  
-  let rawContent = response.choices[0].message.content;
-  // Remove markdown code block markers if present
-  rawContent = rawContent.replace(/```json\s*/i, '').replace(/```/g, '').trim();
-  
-  let recommendations;
+  console.log("OpenAI API call successful!");
+
+  let raw = response.choices[0].message.content.trim();
+  raw = raw.replace(/^```json\s*/i, '').replace(/```$/g, '').trim();
+
   try {
-    recommendations = JSON.parse(rawContent);
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed.recommendations) || parsed.recommendations.length !== 3) {
+      throw new Error("Expected 'recommendations' array of length 3");
+    }
+    return parsed;
   } catch (err) {
-    console.error("Error parsing JSON from GPT response:", err);
-    throw new Error("Failed to parse plant recommendations. Response was: " + rawContent);
+    console.error("Failed to parse JSON from GPT:", err, "\nRaw response was:", raw);
+    throw new Error("Invalid JSON from GPT: " + err.message);
   }
-  return recommendations;
 };
