@@ -3,12 +3,10 @@ import React from 'react';
 import { Platform, TouchableOpacity, View, StyleSheet, TouchableOpacityProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { LinearGradient } from 'expo-linear-gradient';
-
-import { router } from 'expo-router';
-
-import { HapticTab } from '../../components/HapticTab';
-import { Colors } from '../../constants/Colors';
+import { HapticTab } from '@/components/HapticTab';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import TabBarBackground from '@/components/ui/TabBarBackground';
+import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
@@ -21,12 +19,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[theme].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: () => (
-          <LinearGradient
-            colors={['#61D2C4', '#29D890']}
-            style={StyleSheet.absoluteFill}
-          />
-        ),
+        tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -34,13 +27,11 @@ export default function TabLayout() {
             elevation: 0,
             borderTopWidth: 0,
             height: 60,
-            backgroundColor: 'transparent', // Transparent to show gradient
           },
           default: {
             height: 60,
             elevation: 0,
             borderTopWidth: 0,
-            backgroundColor: 'transparent', // Transparent to show gradient
           },
         }),
       }}>
@@ -60,11 +51,11 @@ export default function TabLayout() {
               {...props}
               style={styles.plusButton}
               onPress={() => {
-                // Navigate to the camera screen
-                router.push('/(tabs)/camera');
+                // Camera functionality will be added later
+                console.log('Camera button pressed');
               }}>
-              <View style={[styles.plusButtonInner, { backgroundColor: '#48A2F5' }]}>
-                <Ionicons name="camera" size={28} color="#fff" />
+              <View style={[styles.plusButtonInner, { backgroundColor: Colors[theme].tint }]}>
+                <Ionicons name="add" size={32} color="#FFF" />
               </View>
             </TouchableOpacity>
           ),
@@ -101,10 +92,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  cameraIcon: {
-    width: 28,
-    height: 28,
-    resizeMode: 'contain',
-  },
+  }
 });
