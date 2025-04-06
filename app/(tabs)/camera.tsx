@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   captureButtonInner: {
     width: 60,
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 80,
+    bottom: 120,
     left: 30,
     right: 30,
   },
