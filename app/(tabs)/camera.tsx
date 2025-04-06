@@ -148,7 +148,7 @@ export default function CameraScreen() {
 
     Alert.alert(
       "Plant Identified",
-      `The plant is identified as: ${data.plantName || 'Unknown'}`,
+      `The plant is identified as: ${data.recommendations[0].name || 'Unknown'}`,
       [{ text: "OK" }]
     );
 
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 100,
+    marginBottom: 300,
   },
   instructionTitle: {
     fontSize: 24,
