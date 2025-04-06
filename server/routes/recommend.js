@@ -9,12 +9,14 @@ router.get('/ping', (req, res) => {
   
 router.post('/recommend', async (req, res) => {
     try {
+      console.log("Calling /recommend api.......");
       const { image, location, userType } = req.body; // now includes userType
-  
+      
       const climate = await getClimate(location);
       const recommendations = await getRecommendations(image, location, climate, userType);
-  
+      
       res.json({ recommendations });
+      console.log("/recommend api call succesfull!!!")
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
