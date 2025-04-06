@@ -7,11 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { router } from 'expo-router';
 
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
+import { HapticTab } from '../../components/HapticTab';
+import { Colors } from '../../constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
