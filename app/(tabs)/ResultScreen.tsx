@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import type { RouteProp } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,12 +14,12 @@ import { useNavigationState } from './_layout';
 
 type RootStackParamList = {
   OccupationSelection: { base64Image: string | null; selectedCity: string };
-  ResultScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string };
+  ResultScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string; recommendations: any };
   CameraScreen: undefined;
 };
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'ResultScreen'>;
-type ResultScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ResultScreen'>;
+// type ResultScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ResultScreen'>;
 
 // Default image URLs to use as fallbacks
 const DEFAULT_IMAGES = {
@@ -80,29 +81,33 @@ const fetchPlantImage = async (query: string): Promise<string> => {
   }
 };
 
-export default function ResultScreen({ route }: { route?: ResultScreenRouteProp }) {
+export default function ResultScreen() {
   const { navigationParams, setNavigationParams } = useNavigationState();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<ResultScreenNavigationProp>();
-  const [plantInfo, setPlantInfo] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Get data from route params or navigation context
-  const paramsFromRoute = route?.params || { base64Image: null, selectedCity: '', selectedOccupation: '' };
-  const base64Image = paramsFromRoute.base64Image || navigationParams.base64Image;
-  const selectedCity = paramsFromRoute.selectedCity || navigationParams.selectedCity;
-  const selectedOccupation = paramsFromRoute.selectedOccupation || navigationParams.selectedOccupation;
+//   const navigation = useNavigation<ResultScreenNavigationProp>();
+//   const paramsFromRoute = route?.params || { base64Image: null, selectedCity: '', selectedOccupation: '', recommendations: null };
+//   const base64Image = paramsFromRoute.base64Image || navigationParams.base64Image;
+//   const selectedCity = paramsFromRoute.selectedCity || navigationParams.selectedCity;
+//   const selectedOccupation = paramsFromRoute.selectedOccupation || navigationParams.selectedOccupation;
+//   const recommendations = paramsFromRoute.recommendations || null;
 
-  // Log for debugging
+  const [plantInfo, setPlantInfo] = useState<any[]>([]); // Updated to store an array of recommendations
+  const route = useRoute<ResultScreenRouteProp>();
+  const {
+    base64Image,
+    selectedCity,
+    selectedOccupation,
+    recommendations  // ← here’s the array you passed
+  } = route.params;
+
   useEffect(() => {
-    console.log('ResultScreen received params:', {
-      base64Image: base64Image ? 'Base64 image available' : 'No image',
-      selectedCity,
-      selectedOccupation,
-      fromRoute: route?.params ? 'Yes' : 'No',
-      fromNavigationContext: navigationParams.base64Image ? 'Yes' : 'No'
-    });
-  }, [base64Image, selectedCity, selectedOccupation, navigationParams]);
+    console.log('Received recommendations:', recommendations); // Debugging log
+    if (recommendations && Array.isArray(recommendations)) {
+      setPlantInfo(recommendations); // Store the recommendations array
+    } else {
+      console.warn('No valid recommendations provided. Ensure API call was successful.');
+    }
+  }, [recommendations]);
 
   // Handle back button navigation to OccupationSelection with all needed parameters
   const handleBackNavigation = () => {
@@ -124,67 +129,19 @@ export default function ResultScreen({ route }: { route?: ResultScreenRouteProp 
     // Navigate to camera screen
     navigation.navigate('camera');
   };
+  console.log("plantInfo: ", plantInfo);
 
-  useEffect(() => {
-    const identifyPlant = async () => {
-      setIsLoading(true);
-      try {
-        // Check if parameters are available
-        if (!selectedCity) {
-          console.warn('Missing selectedCity parameter, using fallback');
-        }
-        if (!selectedOccupation) {
-          console.warn('Missing selectedOccupation parameter, using fallback');
-        }
-        
-        // Simulate API response - in a real app, this would come from your backend
-        const plantNames = Object.keys(plantDatabase);
-        const randomPlant = plantNames[Math.floor(Math.random() * plantNames.length)];
-        
-        // Get the plant info without the image
-        const plant = { ...plantDatabase[randomPlant as keyof typeof plantDatabase] };
-        
-        // Try to fetch image from Unsplash API
-        let imageUrl = '';
-        try {
-          // Use both plant name and selected city for better context
-          const searchQuery = `${plant.name} plant in ${selectedCity}`;
-          imageUrl = await fetchPlantImage(searchQuery);
-        } catch (error) {
-          console.log('Error fetching image, using default', error);
-        }
-        
-        // If API fails, use default image
-        if (!imageUrl) {
-          imageUrl = DEFAULT_IMAGES[randomPlant as keyof typeof DEFAULT_IMAGES] || '';
-        }
-        
-        // Set the plant info with the image URL and user-selected data
-        setPlantInfo({ 
-          ...plant, 
-          imageUrl,
-          userCity: selectedCity,
-          userOccupation: selectedOccupation 
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    identifyPlant();
-  }, [selectedCity, selectedOccupation, base64Image]);
-
-  if (isLoading || !plantInfo) {
-      return (
-        <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
-          <StatusBar style="dark" />
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#29D890" />
-            <ThemedText style={styles.loadingText}>Analyzing plant data...</ThemedText>
-          </View>
-        </ThemedView>
-      );
-    }
+  if (!plantInfo || plantInfo.length === 0) {
+    return (
+      <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+        <StatusBar style="dark" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#29D890" />
+          <ThemedText style={styles.loadingText}>Loading recommendations...</ThemedText>
+        </View>
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
@@ -202,7 +159,7 @@ export default function ResultScreen({ route }: { route?: ResultScreenRouteProp 
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         
-        <ThemedText style={styles.headerTitle}>Plant Identified!</ThemedText>
+        <ThemedText style={styles.headerTitle}>Plant Recommendations</ThemedText>
       </LinearGradient>
       
       <ScrollView 
@@ -210,50 +167,22 @@ export default function ResultScreen({ route }: { route?: ResultScreenRouteProp 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >
-        {/* Plant Image */}
-        <View style={styles.imageContainer}>
-          <Image 
-            source={{ uri: plantInfo.imageUrl }} 
-            style={styles.plantImage}
-            resizeMode="cover"
-          />
-        </View>
-        
-        {/* Plant Information */}
-        <View style={styles.infoContainer}>
-          <ThemedText style={styles.plantName}>{plantInfo.name}</ThemedText>
-          <ThemedText style={styles.scientificName}>{plantInfo.scientificName}</ThemedText>
-          
-          <View style={styles.infoCard}>
-            <ThemedText style={styles.sectionTitle}>Description</ThemedText>
-            <ThemedText style={styles.description}>{plantInfo.description}</ThemedText>
-          </View>
-          
-          <View style={styles.infoCard}>
+        {plantInfo.map((plant, index) => (
+          <View key={index} style={styles.infoCard}>
+            <ThemedText style={styles.plantName}>{plant.name}</ThemedText>
+            <ThemedText style={styles.scientificName}>{plant.scientificName}</ThemedText>
+            <ThemedText style={styles.description}>{plant.description}</ThemedText>
             <ThemedText style={styles.sectionTitle}>Care Instructions</ThemedText>
-            <ThemedText style={styles.description}>{plantInfo.careInstructions}</ThemedText>
-          </View>
-          
-          <View style={styles.infoCard}>
+            <ThemedText style={styles.description}>{plant.careInstructions}</ThemedText>
             <ThemedText style={styles.sectionTitle}>Benefits</ThemedText>
-            {plantInfo.benefits.map((benefit: string, index: number) => (
-              <View key={index} style={styles.benefitItem}>
+            {plant.benefits.map((benefit: string, benefitIndex: number) => (
+              <View key={benefitIndex} style={styles.benefitItem}>
                 <Ionicons name="checkmark-circle" size={20} color="#29D890" />
                 <ThemedText style={styles.benefitText}>{benefit}</ThemedText>
               </View>
             ))}
           </View>
-          
-          <TouchableOpacity 
-            style={styles.learnMoreButton}
-            onPress={() => {
-              Linking.openURL(`https://www.google.com/search?q=${encodeURIComponent(plantInfo.name)}+plant`);
-            }}
-          >
-            <ThemedText style={styles.learnMoreText}>Learn More</ThemedText>
-            <Ionicons name="arrow-forward" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        ))}
       </ScrollView>
       
       {/* Bottom action buttons */}
@@ -352,6 +281,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   sectionTitle: {
     fontSize: 18,
