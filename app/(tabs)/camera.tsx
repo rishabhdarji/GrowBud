@@ -9,6 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 
+
+
 export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -87,7 +89,7 @@ export default function CameraScreen() {
     setBase64Image(null);
   };
 
-  const identifyPlant = () => {
+  const identifyPlant = async() => {
     if (base64Image) {
       Alert.alert(
         "Plant Identification", 
@@ -96,7 +98,25 @@ export default function CameraScreen() {
       );
       
       // Here you would send the base64Image to your backend
-      console.log("Base64 image ready to send (first 50 chars):", base64Image.substring(0, 50) + "...");
+      const payload = {
+        image: base64Image,  // e.g. "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQImWNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
+        location: { city: "Chicago" }, // Or use { lat: 40.7128, lon: -74.0060 }
+        userType: "Working Professional"
+      };
+      try {
+        const fileUri = FileSystem.documentDirectory + 'payload.json';
+        console.log('Payload writting to:', fileUri);
+        console.log('base64Image:', base64Image);
+        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(payload));
+        console.log('Payload written to:', fileUri);
+    
+        // Proceed with the API request or other logic
+      } catch (error) {
+        console.error('Error writing payload to file:', error);
+        Alert.alert("Error", "Failed to write payload to file.");
+      }
+    
+      
     }
   };
 
