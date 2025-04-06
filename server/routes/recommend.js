@@ -3,6 +3,10 @@ const router = express.Router();
 const getClimate = require('../services/climateService');
 const getRecommendations = require('../services/openaiService');
 
+router.get('/ping', (req, res) => {
+    res.send("pong");
+  });
+  
 router.post('/recommend', async (req, res) => {
     try {
       const { image, location, userType } = req.body; // now includes userType
@@ -15,5 +19,7 @@ router.post('/recommend', async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+
+ 
   
   module.exports = router;
