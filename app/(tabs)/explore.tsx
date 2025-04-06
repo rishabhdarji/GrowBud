@@ -35,6 +35,26 @@ export default function ProfileScreen() {
             source={require('../../assets/images/icon.png')}
             style={styles.profileImage}
           />
+
+          <ThemedText style={styles.profileName}>Apurv Gaikwad</ThemedText>
+          <ThemedText style={styles.profileBio}>Plant enthusiast & nature photographer</ThemedText>
+          
+          <ThemedView style={styles.statsContainer}>
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>24</ThemedText>
+              <ThemedText style={styles.statLabel}>Plants</ThemedText>
+            </ThemedView>
+            <View style={styles.statDivider} />
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>156</ThemedText>
+              <ThemedText style={styles.statLabel}>Saved</ThemedText>
+            </ThemedView>
+            <View style={styles.statDivider} />
+            <ThemedView style={styles.statItem}>
+              <ThemedText style={styles.statNumber}>9</ThemedText>
+              <ThemedText style={styles.statLabel}>Groups</ThemedText>
+            </ThemedView>
+          </ThemedView>
           <ThemedText style={styles.profileName}>Apurv</ThemedText>
           <ThemedText style={styles.profileLocation}>
             <Ionicons name="location-outline" size={16} color="#FFF" /> Chicago, Illinois
@@ -63,12 +83,57 @@ export default function ProfileScreen() {
         </ThemedView>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
           <ThemedView style={styles.plantCard}>
+
+            <Image 
+              source={require('../../assets/images/7-plant.jpg')} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Monstera</ThemedText>
+              <ThemedText style={styles.plantStatus}>Healthy</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#4CAF50" />
+                <ThemedText style={styles.waterText}>Watered 2d ago</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.plantCard}>
+            <Image 
+              source={require('../../assets/images/snake-plant.jpg')} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Snake Plant</ThemedText>
+              <ThemedText style={styles.plantStatus}>Needs Water</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#FF5722" />
+                <ThemedText style={[styles.waterText, {color: '#FF5722'}]}>Water today</ThemedText>
+              </ThemedView>
+            </ThemedView>
+          </ThemedView>
+
+          <ThemedView style={styles.plantCard}>
+            <Image 
+              source={require('../../assets/images/fiddle-plant.jpg')} 
+              style={styles.plantImage} 
+            />
+            <ThemedView style={styles.plantDetails}>
+              <ThemedText style={styles.plantName}>Fiddle Fig</ThemedText>
+              <ThemedText style={styles.plantStatus}>Healthy</ThemedText>
+              <ThemedView style={styles.waterIndicator}>
+                <Ionicons name="water" size={16} color="#4CAF50" />
+                <ThemedText style={styles.waterText}>Watered 1d ago</ThemedText>
+              </ThemedView>
+            </ThemedView>
+
             <Image
               source={require('../../assets/images/mini-plant.png')}
               style={styles.plantImage}
             />
             <ThemedText style={styles.plantName}>Alagatre Plant</ThemedText>
             <ThemedText style={styles.plantDate}>02 . 01 . 2019</ThemedText>
+
           </ThemedView>
           {/* Add more plant cards as needed */}
         </ScrollView>
