@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 40,
+    bottom: 80,
     left: 30,
     right: 30,
   },
