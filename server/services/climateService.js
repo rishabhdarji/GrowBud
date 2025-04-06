@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-module.exports = async function getClimate(location) {
+module.exports = async function getClimate(location, ip) {
   let lat, lon;
 
   // If coordinates are provided, use them.
@@ -19,9 +19,27 @@ module.exports = async function getClimate(location) {
       throw new Error("City not recognized. Please provide coordinates.");
     }
   } 
-  // If no location is provided, fall back to ipapi for geolocation.
+  // If no location is provided, use the mobile device's IP address to determine location
+  else if (ip) {
+    try {
+      // Use ip-api.com which is a free service to get location from IP
+      const response = await axios.get(`http://ip-api.com/json/${ip}`);
+      
+      if (response.data && response.data.status === 'success') {
+        lat = response.data.lat;
+        lon = response.data.lon;
+        console.log(`Location determined from IP: ${response.data.city}, ${response.data.country}`);
+      } else {
+        throw new Error("Could not determine location from IP address");
+      }
+    } catch (error) {
+      console.error("Error determining location from IP:", error.message);
+      throw new Error("Failed to get location from IP address");
+    }
+  }
+  // Fall back to ipapi for geolocation if no IP is provided.
   else {
-    console.log("No location provided. Using ipapi to determine location.");
+    console.log("No location or IP provided. Using ipapi to determine location.");
     const ipapiUrl = `https://ipapi.co/json/`;
     const ipResponse = await axios.get(ipapiUrl);
     lat = ipResponse.data.latitude;
