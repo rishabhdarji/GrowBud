@@ -4,6 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 const plants = [
   { id: '1', source: require('../../assets/images/7-plant.jpg') },
@@ -16,12 +17,15 @@ const plants = [
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   return (
     <ThemedView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#6CC1E0" />
       <LinearGradient
+
         colors={["#02AABD", "#00CDAC"]}
+
         style={[styles.header, { paddingTop: insets.top + 20 }]}
       >
         <View style={styles.headerContent}>
@@ -46,7 +50,10 @@ export default function HomeScreen() {
 
       <ThemedView style={styles.content}>
         <View style={styles.categoryContainer}>
-          <TouchableOpacity style={styles.categoryButton}>
+          <TouchableOpacity
+            style={styles.categoryButton}
+            onPress={() => navigation.navigate('camera')} // Navigate to the camera screen
+          >
             <Image 
               source={require('../../assets/icons/camera.png')} 
               style={styles.categoryIcon} 
@@ -153,6 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
+    backgroundColor: '#FFF', // Set the background color to white
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -206,7 +214,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '48%',
     aspectRatio: 1,
-    shadowColor: '#000',
+    shadowColor: '#FFF',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
