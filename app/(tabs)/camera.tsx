@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    maxWidth: 300,
+    marginBottom: 100,
   },
   instructionTitle: {
     fontSize: 24,
