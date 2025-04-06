@@ -13,13 +13,15 @@ router.post('/recommend', async (req, res) => {
       const { image, location, userType } = req.body; // now includes userType
       console.log("variables assigned successfully!!!");
       const climate = await getClimate(location);
-      console.log("Climate data fetched successfully!!!")
+      console.log("Climate data fetched successfully!!!");
       const recommendations = await getRecommendations(image, location, climate, userType);
-      console.log("Recommendations fetched successfully!!!")
+      console.log("Recommendations fetched successfully!!!", recommendations);
       
-      res.json({ recommendations });
-      console.log("/recommend api call succesfull!!!")
+      // Ensure the response contains the recommendations array
+      res.json({ recommendations: recommendations.recommendations });
+      console.log("/recommend api call successful!!!");
     } catch (err) {
+      console.error("Error in /recommend:", err);
       res.status(500).json({ error: err.message });
     }
   });
