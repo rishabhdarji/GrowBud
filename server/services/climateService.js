@@ -23,6 +23,7 @@ module.exports = async function getClimate(location) {
   else {
     console.log("No location provided. Using ipapi to determine location.");
     const ipapiUrl = `https://ipapi.co/json/`;
+    console.log("Calling weather api.....")
     const ipResponse = await axios.get(ipapiUrl);
     lat = ipResponse.data.latitude;
     lon = ipResponse.data.longitude;
