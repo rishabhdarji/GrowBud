@@ -37,61 +37,99 @@ export default function TabLayout() {
 
   return (
     <NavigationStateContext.Provider value={{ navigationParams, setNavigationParams }}>
-      <Tabs screenOptions={{
-        tabBarActiveTintColor: '#29D890',
-      }}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: '#29D890',
+          tabBarStyle: {
+            height: 70,
+            backgroundColor: '#fff',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 5,
+          },
+          tabBarItemStyle: {
+            flex: 1, // Ensure all items grow and shrink proportionally
+            alignItems: 'center',
+          },
+        }}
+      >
         <Tabs.Screen
           name="index"
           options={{
             title: 'Home',
+            tabBarItemStyle: { alignItems: 'flex-start' }, // Align Home to the left
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="home" size={size} color={color} />
             ),
           }}
         />
-        
         <Tabs.Screen
           name="camera"
           options={{
-            title: 'Camera',
+            title: '',
+            tabBarItemStyle: { alignItems: 'center' }, // Center Camera
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="camera" size={size} color={color} />
+              <Ionicons name="camera" size={size} color="#fff" />
             ),
+            tabBarIconStyle: {
+              backgroundColor: '#29D890',
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: -20, // Lift Camera button
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 5,
+            },
           }}
         />
-        
         <Tabs.Screen
           name="explore"
           options={{
             title: 'Profile',
+            tabBarItemStyle: { alignItems: 'flex-end' }, // Align Profile to the right
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="person" size={size} color={color} />
             ),
           }}
         />
-        
-        {/* Hide these screens from tab bar but keep them accessible */}
+        <Tabs.Screen
+          name="AppNavigator"
+          options={{
+            tabBarButton: () => null, // Hide AppNavigator from the tab bar
+          }}
+        />
+        {/* Hide these screens from tab bar */}
         <Tabs.Screen
           name="CitySelection"
           options={{
             href: null,
           }}
         />
-        
         <Tabs.Screen
           name="OccupationSelection"
           options={{
             href: null,
           }}
         />
-        
         <Tabs.Screen
           name="LoadingScreen"
           options={{
             href: null,
           }}
         />
-        
         <Tabs.Screen
           name="ResultScreen"
           options={{
