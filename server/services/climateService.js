@@ -11,7 +11,9 @@ module.exports = async function getClimate(location) {
   // If a city is provided, you might have to use a geocoding service.
   // For demonstration, we'll hardcode New York's coordinates.
   else if (location.city) {
-    if (location.city.toLowerCase() === "new york") {
+
+    console.log("City provided:", location.city);
+    if (location.city.toLowerCase() === "chicago") {
       lat = 40.7128;
       lon = -74.0060;
     } else {
@@ -31,6 +33,7 @@ module.exports = async function getClimate(location) {
 
   // Use Open-Meteo to fetch current weather (no API key required)
   // Documentation: https://open-meteo.com/en/docs
+  console.log("Using Open-Meteo API for weather data.");
   const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
   console.log("Calling Open-Meteo API:", openMeteoUrl);
   

@@ -11,9 +11,11 @@ router.post('/recommend', async (req, res) => {
     try {
       console.log("Calling /recommend api.......");
       const { image, location, userType } = req.body; // now includes userType
-      
+      console.log("variables assigned successfully!!!");
       const climate = await getClimate(location);
+      console.log("Climate data fetched successfully!!!")
       const recommendations = await getRecommendations(image, location, climate, userType);
+      console.log("Recommendations fetched successfully!!!")
       
       res.json({ recommendations });
       console.log("/recommend api call succesfull!!!")
