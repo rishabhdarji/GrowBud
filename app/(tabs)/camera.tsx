@@ -6,9 +6,9 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+//import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
-
+import Constants from 'expo-constants';
 
 
 export default function CameraScreen() {
@@ -89,6 +89,33 @@ export default function CameraScreen() {
     setBase64Image(null);
   };
 
+   // Get the development server URL
+   const getServerUrl = () => {
+    if (__DEV__) {
+      // Get the development server IP from Expo
+      const { manifest } = Constants;
+      
+      // For newer Expo versions (SDK 46+)
+      if (manifest && manifest.debuggerHost) {
+        const hostUri = manifest.debuggerHost;
+        const host = hostUri.split(':')[0];
+        if (host) {
+          return `http://${host}:3000`;
+        }
+      }
+      // Fallback for older Expo versions
+      else if (manifest && manifest.hostUri) {
+        const hostUri = manifest.hostUri;
+        const host = hostUri.split(':')[0];
+        if (host) {
+          return `http://${host}:3000`;
+        }
+      }
+    }
+    // Fallback to your hardcoded server URL
+    return 'http://192.168.1.7:3000';
+  };
+
   const identifyPlant = async() => {
     if (base64Image) {
       Alert.alert(
@@ -104,12 +131,28 @@ export default function CameraScreen() {
         userType: "Working Professional"
       };
       try {
-        const fileUri = FileSystem.documentDirectory + 'payload.json';
-        console.log('Payload writting to:', fileUri);
-        console.log('base64Image:', base64Image);
-        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(payload));
-        console.log('Payload written to:', fileUri);
-    
+    const response = await fetch('http://192.168.1.7:3000/api/recommend', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Response from API:', data);
+
+    Alert.alert(
+      "Plant Identified",
+      `The plant is identified as: ${data.recommendations[0].name || 'Unknown'}`,
+      [{ text: "OK" }]
+    );
+
+
         // Proceed with the API request or other logic
       } catch (error) {
         console.error('Error writing payload to file:', error);
