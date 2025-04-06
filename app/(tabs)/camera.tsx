@@ -6,12 +6,23 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-//import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
 import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigationState } from './_layout';
 
+type RootStackParamList = {
+  CameraScreen: undefined;
+  CitySelection: { base64Image: string | null };
+  OccupationSelection: { base64Image: string | null; selectedCity: string };
+  LoadingScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string };
+  ResultScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string };
+};
 
 export default function CameraScreen() {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'CameraScreen'>>();
+  const { navigationParams, setNavigationParams } = useNavigationState();
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [base64Image, setBase64Image] = useState<string | null>(null);
@@ -20,7 +31,6 @@ export default function CameraScreen() {
 
   useEffect(() => {
     (async () => {
-      // Request camera permissions
       const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
       setHasPermission(cameraStatus === 'granted');
       
@@ -40,7 +50,6 @@ export default function CameraScreen() {
     try {
       setIsLoading(true);
       
-      // Use ImagePicker to launch the native camera
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -54,7 +63,6 @@ export default function CameraScreen() {
         const imageUri = result.assets[0].uri;
         setCapturedImage(imageUri);
         
-        // Convert to base64
         await convertToBase64(imageUri);
       }
     } catch (error) {
@@ -68,10 +76,9 @@ export default function CameraScreen() {
     try {
       setIsLoading(true);
       
-      // Resize and compress the image before converting to base64
       const manipResult = await ImageManipulator.manipulateAsync(
         imageUri,
-        [{ resize: { width: 800 } }], // resize to reduce file size
+        [{ resize: { width: 800 } }],
         { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
       
@@ -89,22 +96,17 @@ export default function CameraScreen() {
     setBase64Image(null);
   };
 
-   // Get the development server URL
-   const getServerUrl = () => {
+  const getServerUrl = () => {
     if (__DEV__) {
-      // Get the development server IP from Expo
       const { manifest } = Constants;
       
-      // For newer Expo versions (SDK 46+)
       if (manifest && manifest.debuggerHost) {
         const hostUri = manifest.debuggerHost;
         const host = hostUri.split(':')[0];
         if (host) {
           return `http://${host}:3000`;
         }
-      }
-      // Fallback for older Expo versions
-      else if (manifest && manifest.hostUri) {
+      } else if (manifest && manifest.hostUri) {
         const hostUri = manifest.hostUri;
         const host = hostUri.split(':')[0];
         if (host) {
@@ -112,54 +114,22 @@ export default function CameraScreen() {
         }
       }
     }
-    // Fallback to your hardcoded server URL
     return 'http://192.168.1.7:3000';
   };
 
   const identifyPlant = async() => {
     if (base64Image) {
-      Alert.alert(
-        "Plant Identification", 
-        "Ready to identify this plant! In a real app, this would send the image to your backend for processing.",
-        [{ text: "OK" }]
-      );
+      // Store the image in our navigation context
+      setNavigationParams({
+        ...navigationParams,
+        base64Image
+      });
       
-      // Here you would send the base64Image to your backend
-      const payload = {
-        image: base64Image,  // e.g. "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVQImWNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII="
-        location: { city: "Chicago" }, // Or use { lat: 40.7128, lon: -74.0060 }
-        userType: "Working Professional"
-      };
-      try {
-    const response = await fetch('http://192.168.1.7:3000/api/recommend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Response from API:', data);
-
-    Alert.alert(
-      "Plant Identified",
-      `The plant is identified as: ${data.recommendations[0].name || 'Unknown'}`,
-      [{ text: "OK" }]
-    );
-
-
-        // Proceed with the API request or other logic
-      } catch (error) {
-        console.error('Error writing payload to file:', error);
-        Alert.alert("Error", "Failed to write payload to file.");
-      }
-    
-      
+      console.log('Navigating to CitySelection with base64Image available');
+      navigation.navigate('CitySelection', { base64Image });
+    } else {
+      console.error('No base64Image available to send to CitySelection');
+      Alert.alert("Error", "Failed to process image. Please try again.");
     }
   };
 
@@ -185,8 +155,6 @@ export default function CameraScreen() {
           <TouchableOpacity 
             style={styles.permissionButton}
             onPress={async () => {
-              // For iOS, this will redirect to app settings
-              // For Android, this will re-request permission
               if (Platform.OS === 'ios') {
                 await Linking.openSettings();
               } else {
