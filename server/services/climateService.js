@@ -12,14 +12,19 @@ module.exports = async function getClimate(location) {
   // For demonstration, we'll hardcode New York's coordinates.
   else if (location.city) {
 
-    console.log("City provided:", location.city);
-    if (location.city.toLowerCase() === "chicago") {
-      lat = 40.7128;
-      lon = -74.0060;
-    } else {
-      // Optionally, you could integrate a free geocoding API here.
-      throw new Error("City not recognized. Please provide coordinates.");
+    const city = encodeURIComponent(location.city);
+    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;
+    console.log("Geocoding city via:", geoUrl);
+
+    const geoResp = await axios.get(geoUrl);
+    const results = geoResp.data.results;
+    if (!results || results.length === 0) {
+      throw new Error(`Could not geocode city: ${location.city}`);
     }
+
+    lat = results[0].latitude;
+    lon = results[0].longitude;
+    console.log(`Geocoded ${location.city} → lat:${lat}, lon:${lon}`);
   } 
   // If no location is provided, fall back to ipapi for geolocation.
   else {
