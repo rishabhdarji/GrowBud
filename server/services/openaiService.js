@@ -1,4 +1,6 @@
 const { OpenAI } = require('openai');
+const fs = require('fs');
+const path = require('path');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 module.exports = async function getRecommendations(imageBase64, location, climate, userType) {
@@ -17,7 +19,7 @@ Image Analysis: Analyze the provided image for lighting, available space, and su
 Please provide your recommendations now.
   `;
   console.log("Calling OpenAI API with updated prompt for filtered recommendations...");
-  
+  const startTime = Date.now();
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",  // or the model you're using
     messages: [
@@ -33,13 +35,45 @@ Please provide your recommendations now.
   });
   console.log("OpenAI API call successful!!");
   
+const apiTime = (Date.now() - startTime) / 1000;
+console.log(`OpenAI API call completed in ${apiTime} seconds`);
+  // Save the full response to a file
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const responseFile = path.join(__dirname, '..', 'logs', `openai_response_${timestamp}.json`);
+  
+  // Create logs directory if it doesn't exist
+  const logsDir = path.join(__dirname, '..', 'logs');
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+  
+  // Save the response to a file
+  fs.writeFileSync(
+    responseFile, 
+    JSON.stringify(response, null, 2)
+  );
+  console.log(`Full OpenAI response saved to: ${responseFile}`);
+  
+  // Log the complete response to console
+  console.log("COMPLETE OPENAI RESPONSE:");
+  console.log(JSON.stringify(response, null, 2));
+  
   let rawContent = response.choices[0].message.content;
   // Remove markdown code block markers if present
   rawContent = rawContent.replace(/```json\s*/i, '').replace(/```/g, '').trim();
   
+  console.log("Parsed content from OpenAI:");
+  console.log(rawContent);
+  
   let recommendations;
   try {
     recommendations = JSON.parse(rawContent);
+    
+    // Save the parsed recommendations to a separate file
+    fs.writeFileSync(
+      path.join(__dirname, '..', 'logs', `parsed_recommendations_${timestamp}.json`),
+      JSON.stringify(recommendations, null, 2)
+    );
   } catch (err) {
     console.error("Error parsing JSON from GPT response:", err);
     throw new Error("Failed to parse plant recommendations. Response was: " + rawContent);

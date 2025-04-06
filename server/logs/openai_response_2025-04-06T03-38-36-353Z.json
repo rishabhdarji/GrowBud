@@ -1,0 +1,36 @@
+{
+  "id": "chatcmpl-BJB83w8jIJH0pJHj7ZKk1G3VxBbMy",
+  "object": "chat.completion",
+  "created": 1743910711,
+  "model": "gpt-4o-mini-2024-07-18",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n[\n    {\n        \"name\": \"Snake Plant\",\n        \"description\": \"A hardy plant that thrives on neglect and can tolerate low light and irregular watering.\"\n    },\n    {\n        \"name\": \"Pothos\",\n        \"description\": \"An easy-to-grow vine that adapts well to various light conditions and requires minimal maintenance.\"\n    },\n    {\n        \"name\": \"Spider Plant\",\n        \"description\": \"A resilient plant that produces offshoots and is perfect for beginners due to its low care requirements.\"\n    }\n]\n```",
+        "refusal": null,
+        "annotations": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 25662,
+    "completion_tokens": 113,
+    "total_tokens": 25775,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "service_tier": "default",
+  "system_fingerprint": "fp_86d0290411"
+}
