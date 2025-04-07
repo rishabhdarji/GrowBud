@@ -4,13 +4,14 @@ module.exports = async function getClimate(location) {
   let lat, lon;
 
   // If coordinates are provided, use them.
-  if (location.lat && location.lon) {
-    lat = location.lat;
-    lon = location.lon;
-  } 
+  // if (location.lat && location.lon) {
+  //   lat = location.lat;
+  //   lon = location.lon;
+  // } 
   // If a city is provided, you might have to use a geocoding service.
   // For demonstration, we'll hardcode New York's coordinates.
-  else if (location.city) {
+  // else
+   if (location.city) {
 
     const city = encodeURIComponent(location.city);
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;

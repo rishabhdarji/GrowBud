@@ -41,9 +41,11 @@ router.get('/:id', (req, res) => {
 // POST /api/plants — add a new plant
 router.post('/', (req, res) => {
   const { name , nickname ,description } = req.body;
+  console.log("calling post methond ....................");
   if (!name) {
     return res.status(400).json({ error: '"name" is required' });
   }
+  console.log("this is ",name,description,nickname);
 
   const plant = {
     id: randomUUID(),
@@ -51,6 +53,7 @@ router.post('/', (req, res) => {
     nickname: nickname || '',
     description: description || ''
   };
+  console.log("Thisis plant", plant)
   const plants = loadPlants();
   plants.push(plant);
   savePlants(plants);

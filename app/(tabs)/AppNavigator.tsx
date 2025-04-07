@@ -5,6 +5,7 @@ import CitySelection from './CitySelection';
 import OccupationSelection from './OccupationSelection';
 import LoadingScreen from './LoadingScreen';
 import ResultScreen from './ResultScreen';
+import PlantDetailsScreen from './PlantDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ export default function AppNavigator() {
       <Stack.Screen name="OccupationSelection" component={OccupationSelection} />
       <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
       <Stack.Screen name="ResultScreen" component={ResultScreen} />
+      <Stack.Screen name="PlantDetailsScreen" component={PlantDetailsScreen} />
     </Stack.Navigator>
   );
 }
