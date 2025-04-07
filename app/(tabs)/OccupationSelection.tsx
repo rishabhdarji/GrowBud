@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +15,7 @@ type RootStackParamList = {
   CitySelection: { base64Image: string | null };
   OccupationSelection: { base64Image: string | null; selectedCity: string };
   LoadingScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string };
+  ResultScreen: { base64Image: string | null; selectedCity: string; selectedOccupation: string; recommendations: any };
 };
 
 type OccupationSelectionRouteProp = RouteProp<RootStackParamList, 'OccupationSelection'>;
@@ -28,6 +29,7 @@ export default function OccupationSelection({ route }: { route?: OccupationSelec
   const selectedCity = paramsFromRoute.selectedCity || navigationParams.selectedCity;
   
   const [selectedOccupation, setSelectedOccupation] = useState<string | null>(navigationParams.selectedOccupation || null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation<OccupationSelectionNavigationProp>();
   const insets = useSafeAreaInsets();
 
@@ -56,20 +58,54 @@ export default function OccupationSelection({ route }: { route?: OccupationSelec
     'Other'
   ];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedOccupation) {
-      setNavigationParams({
-        ...navigationParams,
-        base64Image,
-        selectedCity,
-        selectedOccupation
-      });
+      setIsLoading(true);
+
+      try {
+        // Update navigation context
+        setNavigationParams({
+          ...navigationParams,
+          base64Image,
+          selectedCity,
+          selectedOccupation,
+        });
+
+        // Make API request to /api/recommend
+        const response = await fetch('http://192.168.1.7:3000/api/recommend', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            image: base64Image,
+            location: { city: selectedCity },
+            userType: selectedOccupation,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch recommendations');
+        }
+
+        const data = await response.json();
+        console.log('API response:', data);
+
+        // Extract recommendations array and pass it to ResultScreen
       
-      navigation.navigate('LoadingScreen', {
-        base64Image,
-        selectedCity,
-        selectedOccupation
-      });
+        navigation.navigate('ResultScreen', {
+            base64Image,
+            selectedCity,
+            selectedOccupation,
+            recommendations: data.recommendations, // Pass recommendations array
+          });
+        }
+       catch (error) {
+        console.error('Error fetching recommendations:', error);
+        Alert.alert('Error', 'Failed to fetch recommendations. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -131,13 +167,20 @@ export default function OccupationSelection({ route }: { route?: OccupationSelec
       <TouchableOpacity
         style={[
           styles.submitButton,
-          !selectedOccupation && styles.disabledButton
+          !selectedOccupation && styles.disabledButton,
+          isLoading && styles.disabledButton, // Disable button while loading
         ]}
         onPress={handleSubmit}
-        disabled={!selectedOccupation}
+        disabled={!selectedOccupation || isLoading}
       >
-        <ThemedText style={styles.submitButtonText}>Submit</ThemedText>
-        <Ionicons name="arrow-forward" size={20} color="#fff" style={{marginLeft: 5}} />
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <>
+            <ThemedText style={styles.submitButtonText}>Submit</ThemedText>
+            <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 5 }} />
+          </>
+        )}
       </TouchableOpacity>
     </ThemedView>
   );
